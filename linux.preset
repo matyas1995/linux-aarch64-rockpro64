@@ -1,4 +1,4 @@
-# mkinitcpio preset file for the 'linux-aarch64' package
+# mkinitcpio preset file for the 'linux-rockpro64' package
 
 ALL_config="/etc/mkinitcpio.conf"
 ALL_kver="4.3.0-1-ARCH"

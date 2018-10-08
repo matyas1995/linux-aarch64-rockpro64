@@ -1,55 +1,31 @@
-# AArch64 multi-platform
+# Rockpro 64
 # Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
 
 buildarch=8
 
-pkgbase=linux-aarch64
-_srcname=linux-4.18
+pkgbase=linux-rockpro64
+_commit=45828c4db72768c1d8cd742ebbe1ddc3088d2d85
+_srcname=linux-mainline-kernel-${_commit}
 _kernelname=${pkgbase#linux}
-_desc="AArch64 multi-platform"
-pkgver=4.18.11
+_desc="Rockpro64"
+pkgver=4.18.0
 pkgrel=1
 arch=('aarch64')
-url="http://www.kernel.org/"
+url="https://github.com/ayufan-rock64/linux-mainline-kernel"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
-source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
-        "http://www.kernel.org/pub/linux/kernel/v4.x/patch-${pkgver}.xz"
-        '0001-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch'
-        '0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch'
-        '0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch'
-        '0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch'
+source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commit}.tar.gz"
         'config'
-        'kernel.its'
-        'kernel.keyblock'
-        'kernel_data_key.vbprivk'
         'linux.preset'
         '99-linux.hook')
-md5sums=('bee5fe53ee1c3142b8f0c12c0d3348f9'
-         '35f0d753cd3e1fb905299d8b4af5e7d7'
-         'be4199c685434f12190bb627bb714ff2'
-         'b4d613a58a28445ce8363d734be3b971'
-         'b9bec2a58df6dff282df758edf8f526e'
-         '9915046e15f82e917bc98c7721e63ac4'
-         '96969a438a2a4e39df5ed44e8ba68c03'
-         '11a4f35c50f0bde59c30182aa7b797b7'
-         '61c5ff73c136ed07a7aadbf58db3d96a'
-         '584777ae88bce2c5659960151b64c7d8'
-         'b5ef67d6086e20de7b82265f562f88b1'
+md5sums=('618e078367c6354ceb6639886d1af6da'
+         'ed5f4e1e8b9d5bccc1f55585af9d0458'
+         '8850ca6bb2e35ee62d25a5ba97097255'
          '1d4477026533efaa0358a40855d50a83')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
-
-  # add upstream patch
-  git apply --whitespace=nowarn ../patch-${pkgver}
-
-  # ALARM patches
-  git apply ../0001-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
-  git apply ../0002-arm64-dts-rockchip-disable-pwm0-on-rk3399-firefly.patch
-  git apply ../0003-arm64-dts-rockchip-add-usb3-controller-node-for-RK33.patch
-  git apply ../0004-arm64-dts-rockchip-enable-usb3-nodes-on-rk3328-rock6.patch
 
   cat "${srcdir}/config" > ./.config
 
@@ -87,10 +63,7 @@ build() {
   #yes "" | make config
 
   # build!
-  unset LDFLAGS
-  make ${MAKEFLAGS} Image Image.gz modules
-  # Generate device tree blobs with symbols to support applying device tree overlays in U-Boot
-  make ${MAKEFLAGS} DTC_FLAGS="-@" dtbs
+  make ${MAKEFLAGS} Image Image.gz modules dtbs
 }
 
 _package() {
@@ -264,34 +237,7 @@ _package-headers() {
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,x86,xtensa}
 }
 
-_package-chromebook() {
-  pkgdesc="The Linux Kernel - ${_desc} - Chromebooks"
-  depends=('linux-aarch64')
-  conflicts=('linux-aarch64-rc-chromebook')
-  install=${pkgname}.install
-
-  cd "${srcdir}/${_srcname}"
-
-  mkdir -p "${pkgdir}/boot"
-  cp ../kernel.its .
-
-  mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg
-  dd if=/dev/zero of=bootloader.bin bs=512 count=1
-  echo "console=tty0 console=ttyS2,115200n8 earlyprintk=ttyS2,115200n8 init=/sbin/init root=PARTUUID=%U/PARTNROFF=1 rootwait rw noinitrd" > cmdline
-  vbutil_kernel \
-    --pack vmlinux.kpart \
-    --version 1 \
-    --vmlinuz vmlinux.uimg \
-    --arch aarch64 \
-    --keyblock ../kernel.keyblock \
-    --signprivate ../kernel_data_key.vbprivk \
-    --config cmdline \
-    --bootloader bootloader.bin
-
-  cp vmlinux.kpart "${pkgdir}/boot"
-}
-
-pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-chromebook")
+pkgname=("${pkgbase}" "${pkgbase}-headers")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
     _package${_p#${pkgbase}}
