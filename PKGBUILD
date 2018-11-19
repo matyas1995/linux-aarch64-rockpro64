@@ -13,7 +13,7 @@ pkgrel=1073
 arch=('aarch64')
 url="https://github.com/ayufan-rock64/linux-mainline-kernel"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc' 'make')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc' 'base-devel')
 options=('!strip')
 source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commit}.tar.gz"
         'config'
