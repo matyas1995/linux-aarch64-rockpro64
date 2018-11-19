@@ -20,7 +20,7 @@ source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commi
         'linux.preset'
         '99-linux.hook')
 md5sums=('c5a307e82ef0e6c2548053fd909b2823'
-         'ed5f4e1e8b9d5bccc1f55585af9d0458'
+         '8eaac87ef86d4d5dcd26025c2ecf3f72'
          '8850ca6bb2e35ee62d25a5ba97097255'
          '1d4477026533efaa0358a40855d50a83')
 
