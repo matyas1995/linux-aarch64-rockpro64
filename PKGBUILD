@@ -4,22 +4,22 @@
 buildarch=8
 
 pkgbase=linux-rockpro64
-_commit=45828c4db72768c1d8cd742ebbe1ddc3088d2d85
+_commit=a6e013135a6e0b6b185a48d9f55664c2ee73d1bb
 _srcname=linux-mainline-kernel-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Rockpro64"
-pkgver=4.18.0
-pkgrel=1
+pkgver=4.19.0
+pkgrel=1073
 arch=('aarch64')
 url="https://github.com/ayufan-rock64/linux-mainline-kernel"
 license=('GPL2')
-makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
+makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc' 'make')
 options=('!strip')
 source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commit}.tar.gz"
         'config'
         'linux.preset'
         '99-linux.hook')
-md5sums=('618e078367c6354ceb6639886d1af6da'
+md5sums=('c5a307e82ef0e6c2548053fd909b2823'
          'ed5f4e1e8b9d5bccc1f55585af9d0458'
          '8850ca6bb2e35ee62d25a5ba97097255'
          '1d4477026533efaa0358a40855d50a83')
