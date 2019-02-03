@@ -1,15 +1,15 @@
-# Rockpro 64
-# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
+# RockPro 64
+# Maintainer: Matyas Mehn <matyas.mehn@tum.de>
 
 buildarch=8
 
 pkgbase=linux-rockpro64
-_commit=a6e013135a6e0b6b185a48d9f55664c2ee73d1bb
+_commit=686e1f1aa461afd4100a18f0374a59e86b23069b
 _srcname=linux-mainline-kernel-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Rockpro64"
-pkgver=4.19.0
-pkgrel=1073
+pkgver=4.20.0
+pkgrel=1083
 arch=('aarch64')
 url="https://github.com/ayufan-rock64/linux-mainline-kernel"
 license=('GPL2')
@@ -19,7 +19,7 @@ source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commi
         'config'
         'linux.preset'
         '99-linux.hook')
-md5sums=('c5a307e82ef0e6c2548053fd909b2823'
+md5sums=('e46cacdffecb21fc0c355abbb2bc7a68'
          'd251f9baf917ed65e37a468199ed1c9e'
          '8850ca6bb2e35ee62d25a5ba97097255'
          '1d4477026533efaa0358a40855d50a83')

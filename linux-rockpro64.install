@@ -2,7 +2,7 @@
 # arg 2:  the old package version
 
 KERNEL_NAME=-rockpro64
-KERNEL_VERSION=4.19.0-1073
+KERNEL_VERSION=4.20.0-1083
 
 post_install () {
   # updating module dependencies
