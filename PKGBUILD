@@ -28,7 +28,6 @@ prepare() {
   cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
 
   cat "${srcdir}/config" > ./.config
-#  make rockchip_linux_defconfig
 
   # add pkgrel to extraversion
   sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile
@@ -42,8 +41,6 @@ build() {
 
   # get kernel version
   make prepare
-
-  # load configuration
 
   # Configure the kernel. Replace the line below with one of your choice.
   make menuconfig
