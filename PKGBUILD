@@ -1,33 +1,34 @@
-# RockPro 64
-# Maintainer: Matyas Mehn <matyas.mehn@tum.de>
+# AArch64 multi-platform
 
 buildarch=8
 
-pkgbase=linux-rockpro64
-_commit=686e1f1aa461afd4100a18f0374a59e86b23069b
-_srcname=linux-mainline-kernel-${_commit}
+pkgbase=linux-aarch64
+_srcname=linux-4.20
 _kernelname=${pkgbase#linux}
-_desc="Rockpro64"
+_desc="AArch64 kernel for RockPro64"
 pkgver=4.20.0
-pkgrel=1083
+pkgrel=1090
 arch=('aarch64')
-url="https://github.com/ayufan-rock64/linux-mainline-kernel"
+url="http://www.kernel.org/"
 license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
-source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${_commit}.tar.gz"
-        'config'
+source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${pkgver}-${pkgrel}-ayufan.tar.gz"
         'linux.preset'
-        '99-linux.hook')
-md5sums=('e46cacdffecb21fc0c355abbb2bc7a68'
-         'd251f9baf917ed65e37a468199ed1c9e'
-         '8850ca6bb2e35ee62d25a5ba97097255'
-         '1d4477026533efaa0358a40855d50a83')
+        '99-linux.hook'
+        'linux-aarch64-rockpro64.install'
+        'config')
+md5sums=('842ad31a3e889fb9a6aa8814d272d506'
+         '3c31b17823744b5acb9b7216aca02ad9'
+         '1d4477026533efaa0358a40855d50a83'
+         'dc56787cd08d236537d9a2c832b766c5'
+         'b341914d8a3490abd7f71690acf29c71')
 
 prepare() {
-  cd "${srcdir}/${_srcname}"
+  cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
 
   cat "${srcdir}/config" > ./.config
+#  make rockchip_linux_defconfig
 
   # add pkgrel to extraversion
   sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile
@@ -37,36 +38,27 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/${_srcname}"
+  cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
 
   # get kernel version
   make prepare
 
   # load configuration
+
   # Configure the kernel. Replace the line below with one of your choice.
-  #make menuconfig # CLI menu for configuration
-  #make nconfig # new CLI menu for configuration
-  #make xconfig # X-based configuration
-  #make oldconfig # using old config from previous kernel version
-  # ... or manually edit .config
+  make menuconfig
 
   # Copy back our configuration (use with new kernel version)
-  #cp ./.config ../${pkgbase}.config
-
-  ####################
-  # stop here
-  # this is useful to configure the kernel
-  #msg "Stopping build"
-  #return 1
-  ####################
-
-  #yes "" | make config
+  cp ./.config ../${pkgbase}.config
 
   # build!
-  make ${MAKEFLAGS} Image Image.gz modules dtbs
+  unset LDFLAGS
+  make ${MAKEFLAGS} Image Image.gz modules
+  # Generate device tree blobs with symbols to support applying device tree overlays in U-Boot
+  make ${MAKEFLAGS} DTC_FLAGS="-@" dtbs
 }
 
-_package() {
+_package-rockpro64() {
   pkgdesc="The Linux Kernel and modules - ${_desc}"
   depends=('coreutils' 'linux-firmware' 'kmod' 'mkinitcpio>=0.7')
   optdepends=('crda: to set the correct wireless channels of your country')
@@ -76,7 +68,7 @@ _package() {
   backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=${pkgname}.install
 
-  cd "${srcdir}/${_srcname}"
+  cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
 
   KARCH=arm64
 
@@ -131,12 +123,11 @@ _package() {
 _package-headers() {
   pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
   provides=("linux-headers=${pkgver}")
-  replaces=('linux-armv8-headers')
   conflicts=('linux-headers')
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 
-  cd "${srcdir}/${_srcname}"
+  cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
   install -D -m644 Makefile \
     "${pkgdir}/usr/lib/modules/${_kernver}/build/Makefile"
   install -D -m644 kernel/Makefile \
@@ -237,7 +228,7 @@ _package-headers() {
   rm -rf "${pkgdir}"/usr/lib/modules/${_kernver}/build/arch/{alpha,arc,arm,arm26,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,x86,xtensa}
 }
 
-pkgname=("${pkgbase}" "${pkgbase}-headers")
+pkgname=("${pkgbase}-rockpro64" "${pkgbase}-headers")
 for _p in ${pkgname[@]}; do
   eval "package_${_p}() {
     _package${_p#${pkgbase}}
