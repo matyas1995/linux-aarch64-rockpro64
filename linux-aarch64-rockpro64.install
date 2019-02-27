@@ -1,8 +1,8 @@
 # arg 1:  the new package version
 # arg 2:  the old package version
 
-KERNEL_NAME=-rockpro64
-KERNEL_VERSION=4.19.0-1073
+KERNEL_NAME=-aarch64
+KERNEL_VERSION=4.20.0-1090
 
 post_install () {
   # updating module dependencies
