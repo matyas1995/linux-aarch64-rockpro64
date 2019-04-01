@@ -7,7 +7,7 @@ _srcname=linux-5.0
 _kernelname=${pkgbase#linux}
 _desc="AArch64 kernel for RockPro64"
 pkgver=5.0.0
-pkgrel=1101
+pkgrel=1103
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -18,7 +18,7 @@ source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${pkgver
         '99-linux.hook'
         'linux-aarch64-rockpro64.install'
         'config')
-md5sums=('8534a4b1eb7febe9a8f34ef8c45e037a'
+md5sums=('2f06932f4e446db1b29d8272eaf7d8ac'
          '3c31b17823744b5acb9b7216aca02ad9'
          '1d4477026533efaa0358a40855d50a83'
          'ad567972d81f46e73de0061673d0c8e5'
