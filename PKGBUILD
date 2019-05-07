@@ -21,8 +21,8 @@ source=("https://github.com/ayufan-rock64/linux-mainline-kernel/archive/${pkgver
 md5sums=('fb89e86362e92cbc2daa8ddce60ac137'
          '3c31b17823744b5acb9b7216aca02ad9'
          '1d4477026533efaa0358a40855d50a83'
-         '47d63557086e05443008def31458b789'
-         '91926cf9091924de3e30e7a2a882b974')
+         '257f9930966dc10e22aa680ba4105761'
+         '1619d3db1b64073d6cd518f22a5dfc31')
 
 prepare() {
   cd "${srcdir}/linux-mainline-kernel-${pkgver}-${pkgrel}-ayufan"
